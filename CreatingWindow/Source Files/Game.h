@@ -9,7 +9,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-
+#include <iostream>
 /*
     Class that acts as the game engine.
     Wrapper class.
@@ -22,10 +22,12 @@ private:
     sf::RenderWindow* window;
     sf::VideoMode videoMode;
     sf::Event ev;
+    sf::RectangleShape enemy;
 
     //private functions
     void initVariables();
     void initWindow();
+    void initEnemies();
 
 public:
     //Constructors  / Destructors
