@@ -8,4 +8,5 @@ add_executable(Game2 main.cpp Game.cpp Game.h Player.cpp Player.h SwagBall.cpp S
 SET(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR "D:/SFML-2.5.1/lib/cmake/SFML")
 find_package(SFML 2.5.1 COMPONENTS system window graphics audio REQUIRED)
+file(COPY "resources" DESTINATION "${CMAKE_BINARY_DIR}")
 target_link_libraries(Game2 sfml-system sfml-window sfml-graphics sfml-audio)

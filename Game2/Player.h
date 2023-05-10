@@ -10,23 +10,27 @@
 class Player {
 private:
     sf::RectangleShape shape;
-
-    void initVariables();
-
-    void initShape();
-
     float movementSpeed;
     int hp;
     int hpMax;
-    int points;
+
+    //PRIVATE FUNCTIONS
+    void initVariables();
+    void initShape();
 
 public:
+    //CONSTRUCTOR & DESTRUCTOR
     Player(float x = 0.5f, float y = 0.5f);
     virtual ~Player();
 
-    const sf::RectangleShape& getShape()const;
+    //ACCESSORS
+    const sf::RectangleShape& getShape()const { return this->shape; }
+    const int & getHp()const { return this->hp; }
+    const int & getHpMax()const { return this->hpMax; }
 
-    bool checkCollision()const;
+    //FUNCTIONS
+    void takeDamage(const int &dmg);
+    void takeHeal(const int &heal);
     void update(const sf::RenderTarget* target);
     void updateInput();
     void updateWindowBoundsCollision(const sf::RenderTarget* target);
