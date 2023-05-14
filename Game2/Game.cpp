@@ -32,6 +32,13 @@ void Game::initText() {
     this->guiText.setFont(this->font);
     this->guiText.setCharacterSize(32);
     this->guiText.setString("test");
+
+    //end game text
+    this->endGameText.setFont(this->font);
+    this->endGameText.setFillColor(sf::Color::Red);
+    this->endGameText.setCharacterSize(60);
+    this->endGameText.setPosition(sf::Vector2f(20,300));
+    this->endGameText.setString("YOU ARE DEAD, EXIT THE GAME!");
 }
 void Game::initVariables() {
     this->points = 0;
@@ -48,21 +55,32 @@ void Game::render() {
     for(auto & item : this->swagBalls){
         item.render(*this->window);
     }
+    //render gui
     this->renderGui(*this->window);
+
+    //render end text
+    if(this->endGame){
+        this->window->draw(this->endGameText);
+    }
+
+    //render window
     this->window->display();
 }
 
 void Game::update() {
 
     this->pollEvents();
+    if(!this->endGame){
+
+    }
     this->spawnSwagBalls();
-    this->player.update(this->window);
+    this->updatePlayer();
     this->updateCollision();
     this->updateGui();
 }
 
 bool Game::running() const {
-    return this->window->isOpen();
+    return this->window->isOpen(); // && !this->endGame;
 }
 
 void Game::pollEvents() {
@@ -87,12 +105,22 @@ void Game::spawnSwagBalls() {
     }
     else{
         if(this->swagBalls.size() < this->maxSwagBalls){
-            this->swagBalls.emplace_back(*this->window,rand()%SwagBallTypes::NROFTYPES);
+            this->swagBalls.emplace_back(*this->window,this->randomizeType());
             this->spawnTimer = 0.f;
         }
     }
 }
 
+int Game::randomizeType() const {
+    int type = SwagBallTypes::Default;
+    int randValue = rand() % 100 + 1;
+    if(randValue > 60 && randValue <= 80){ //60 - 80
+        type = SwagBallTypes::Damaging;
+    }else if (randValue > 80){ // 81 - 100
+        type = SwagBallTypes::Healing;
+    }
+    return type;
+}
 void Game::updateCollision() {
     for (size_t i = 0; i < this->swagBalls.size(); ++i) {
         if(this->player.getShape()
@@ -127,7 +155,19 @@ void Game::updateGui() {
     std::stringstream ss;
 
     ss <<"Points:\t" << this->points << '\n'
-        << "Health:\t" << this->player.getHpMax() <<'/'<< this->player.getHp()<<'\n';
+        << "Health:\t" <<  this->player.getHp()<<'/'<< this->player.getHpMax()<<'\n';
 
     this->guiText.setString(ss.str());
 }
+
+const bool &Game::getEndGame() const {
+    return this->endGame;
+}
+
+void Game::updatePlayer() {
+    this->player.update(this->window);
+    if(this->player.getHp() <= 0){
+        this->endGame=true;
+    }
+}
+

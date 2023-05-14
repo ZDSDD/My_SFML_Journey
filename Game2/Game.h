@@ -28,6 +28,7 @@ private:
 
     sf::Font font;
     sf::Text guiText;
+    sf::Text endGameText;
 
     void initVariables();
 
@@ -43,6 +44,7 @@ public:
     ~Game();
 
     //Accessors
+    const bool& getEndGame() const;
 
     //Modifiers
 
@@ -61,7 +63,11 @@ public:
 
     void updateGui();
 
+    void updatePlayer();
+
     void renderGui(sf::RenderTarget &target);
+
+    int randomizeType() const;
 };
 
 

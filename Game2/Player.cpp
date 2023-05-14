@@ -5,8 +5,8 @@
 #include "Player.h"
 
 void Player::initVariables() {
-    this->movementSpeed = 5.f;
-    this->hpMax = 100;
+    this->movementSpeed = 9.f;
+    this->hpMax = 3;
     this->hp = hpMax;
 }
 
