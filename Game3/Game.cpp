@@ -8,6 +8,7 @@ Game::Game() {
     this->initTextures();
     this->initWindow();
     this->initPlayer();
+    this->initEnemies();
 }
 
 Game::~Game() {
@@ -24,6 +25,10 @@ Game::~Game() {
     for (auto *i: this->bullets) {
         delete i;
     }
+    //Delete enemies
+    for (auto *i: this->enemies) {
+        delete i;
+    }
 }
 
 //Functions
@@ -36,7 +41,6 @@ void Game::run() {
 
 void Game::initPlayer() {
     this->player = new Player();
-    this->enemy = new Enemy(0.f,0.f);
 }
 
 void Game::initTextures() {
@@ -52,6 +56,11 @@ void Game::initWindow() {
 
 }
 
+void Game::initEnemies() {
+    this->timerMax = 100.f;
+    this->spawnTimer = this->timerMax;
+}
+
 void Game::update() {
 
     this->updatePollEvents();
@@ -59,6 +68,7 @@ void Game::update() {
     this->updateInput();
     this->updateBullet();
     this->player->update();
+    this->updateEnemies();
 }
 
 void Game::render() {
@@ -72,7 +82,9 @@ void Game::render() {
         bullet->render(*this->window);
     }
 
-    this->enemy->render(*this->window);
+    for (auto &enemy: this->enemies) {
+        enemy->render(*this->window);
+    }
 
     this->window->display();
 }
@@ -103,16 +115,16 @@ void Game::updateInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         this->player->move(0.f, 1.f);
     }
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)&& this->player->canAttack()) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->player->canAttack()) {
         this->bullets.push_back(
                 new Bullet(
                         this->textures["BULLET"],
-                        this->player->getPos().x,
+                        this->player->getPos().x + this->player->getBounds().width/2,
                         this->player->getPos().y,
                         0.f,
                         -1.f,
                         7.f)
-                        );
+        );
     }
 }
 
@@ -124,15 +136,25 @@ void Game::updateBullet() {
         bullet->update();
 
         //Bullet culling (top of screen)
-        if(bullet->getBounds().top + bullet->getBounds().height < 0.f){
+        if (bullet->getBounds().top + bullet->getBounds().height < 0.f) {
             //Delete bullet
             delete this->bullets.at(counter);
-            this->bullets.erase(this->bullets.begin()+counter);
+            this->bullets.erase(this->bullets.begin() + counter);
             --counter;
             std::cout << this->bullets.size() << '\n';
         }
         ++counter;
     }
 }
+
+void Game::updateEnemies() {
+    this->spawnTimer += 0.5f;
+    if(this->spawnTimer >= this->timerMax){
+        this->enemies.push_back(new Enemy(rand() % 200 + 5, rand() % 100 + 20));
+        this->spawnTimer=0;
+    }
+}
+
+
 
 

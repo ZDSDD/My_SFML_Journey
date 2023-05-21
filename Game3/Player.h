@@ -28,6 +28,7 @@ public:
     ///     ACCESSORS    ///
     const sf::Vector2f & getPos() const;
     bool canAttack();
+    sf::FloatRect getBounds()const;
 
     ///     Functions     ////
 

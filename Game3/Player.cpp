@@ -71,3 +71,7 @@ void Player::initVariables() {
     this->attackCooldownMax = 10.f;
     this->attackCooldown = this->attackCooldownMax;
 }
+
+sf::FloatRect Player::getBounds() const {
+    return this->sprite.getGlobalBounds();
+}
