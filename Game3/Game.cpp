@@ -5,6 +5,7 @@
 #include "Game.h"
 
 Game::Game() {
+    this->initTextures();
     this->initWindow();
     this->initPlayer();
 }
@@ -12,48 +13,52 @@ Game::Game() {
 Game::~Game() {
     delete this->player;
     delete this->window;
+
+    //Delete textures
+
+    for (auto &i: this->textures) {
+        delete i.second;
+    }
+
+    //Delete bullets
+    for (auto *i: this->bullets) {
+        delete i;
+    }
 }
 
 //Functions
 void Game::run() {
-    while(this->window->isOpen()) {
+    while (this->window->isOpen()) {
         this->update();
         this->render();
     }
 }
 
+void Game::initPlayer() {
+    this->player = new Player();
+    this->enemy = new Enemy(0.f,0.f);
+}
+
+void Game::initTextures() {
+    this->textures["BULLET"] = new sf::Texture();
+    this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+}
 
 void Game::initWindow() {
-    this->window = new sf::RenderWindow(sf::VideoMode(800,600),
-                                        "Game 3",sf::Style::Close | sf::Style::Titlebar);
+    this->window = new sf::RenderWindow(sf::VideoMode(800, 600),
+                                        "Game 3", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);
     this->window->setVerticalSyncEnabled(false);
 
 }
 
 void Game::update() {
-    sf::Event e{};
-    while(this->window->pollEvent(e)){
-        if(e.type == sf::Event::Closed){
-            this->window->close();
-        }
-        if(e.Event::key.code == sf::Keyboard::Escape){
-            this->window->close();
-        }
-    }
+
+    this->updatePollEvents();
     //Move player
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        this->player->move(-1.f,0.f);
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        this->player->move(1.f,0.f);
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        this->player->move(0.f,-1.0f);
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        this->player->move(0.f,1.f);
-    }
+    this->updateInput();
+    this->updateBullet();
+    this->player->update();
 }
 
 void Game::render() {
@@ -62,9 +67,72 @@ void Game::render() {
 
     //Draw all the stuff
     this->player->render(*this->window);
+
+    for (auto &bullet: this->bullets) {
+        bullet->render(*this->window);
+    }
+
+    this->enemy->render(*this->window);
+
     this->window->display();
 }
 
-void Game::initPlayer() {
-    this->player = new Player();
+
+void Game::updatePollEvents() {
+    sf::Event e{};
+    while (this->window->pollEvent(e)) {
+        if (e.type == sf::Event::Closed) {
+            this->window->close();
+        }
+        if (e.Event::key.code == sf::Keyboard::Escape) {
+            this->window->close();
+        }
+    }
 }
+
+void Game::updateInput() {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        this->player->move(-1.f, 0.f);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        this->player->move(1.f, 0.f);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        this->player->move(0.f, -1.0f);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        this->player->move(0.f, 1.f);
+    }
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)&& this->player->canAttack()) {
+        this->bullets.push_back(
+                new Bullet(
+                        this->textures["BULLET"],
+                        this->player->getPos().x,
+                        this->player->getPos().y,
+                        0.f,
+                        -1.f,
+                        7.f)
+                        );
+    }
+}
+
+void Game::updateBullet() {
+
+
+    unsigned counter = 0;
+    for (auto &bullet: this->bullets) {
+        bullet->update();
+
+        //Bullet culling (top of screen)
+        if(bullet->getBounds().top + bullet->getBounds().height < 0.f){
+            //Delete bullet
+            delete this->bullets.at(counter);
+            this->bullets.erase(this->bullets.begin()+counter);
+            --counter;
+            std::cout << this->bullets.size() << '\n';
+        }
+        ++counter;
+    }
+}
+
+

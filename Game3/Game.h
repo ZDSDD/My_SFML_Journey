@@ -4,19 +4,36 @@
 
 #ifndef GAME3_GAME_H
 #define GAME3_GAME_H
+
 #include <Sfml/Graphics.hpp>
 #include <iostream>
 #include "Player.h"
+#include <map>
+#include <vector>
+#include "Bullet.h"
+#include "Enemy.h"
+
 class Game {
 private:
 
-    sf::RenderWindow* window;
+    sf::RenderWindow *window;
 
+    //Resources
+    std::map<std::string, sf::Texture*> textures;
+    std::vector<Bullet*> bullets;
     //Player
-    Player * player;
+    Player *player;
+
+    //Enemies
+    Enemy* enemy;
+
     //Private functions
     void initWindow();
+
     void initPlayer();
+
+    void initTextures();
+
 public:
     Game();
 
@@ -24,7 +41,14 @@ public:
 
     void run();
 
+    void updatePollEvents();
+
+    void updateInput();
+
+    void updateBullet();
+
     void update();
+
     void render();
 };
 
