@@ -4,10 +4,11 @@
 
 #include "Enemy.h"
 
-Enemy::Enemy(float pos_x, float pos_y) {
+Enemy::Enemy(float pos_x, float pos_y, float speed) {
     this->initVariables();
     this->initShape();
     this->shape.setPosition(pos_x,pos_y);
+    this->speed = speed;
 }
 
 Enemy::~Enemy() {
@@ -26,12 +27,18 @@ void Enemy::initVariables() {
     this->hp = hpMax;
     this->damage = 1;
     this->points = 5;
+
 }
 
 void Enemy::update() {
-
+this->shape.move(0.f,this->speed);
+this->shape.rotate(0.5f);
 }
 
 void Enemy::render(sf::RenderTarget &target) {
     target.draw(this->shape);
+}
+
+sf::FloatRect Enemy::getBounds() {
+    return this->shape.getGlobalBounds();
 }

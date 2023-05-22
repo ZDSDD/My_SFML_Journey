@@ -14,13 +14,17 @@ private:
     int hpMax;
     int damage;
     int points;
+    float speed;
 
     void initShape();
     void initVariables();
 public:
-    Enemy(float pos_x, float pos_y);
+    Enemy(float pos_x, float pos_y, float speed = 1.f);
     virtual ~Enemy();
 
+
+    //Accesors
+    sf::FloatRect  getBounds();
     //Functions
     void update();
     void render(sf::RenderTarget & target);

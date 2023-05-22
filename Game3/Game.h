@@ -19,8 +19,8 @@ private:
     sf::RenderWindow *window;
 
     //Resources
-    std::map<std::string, sf::Texture*> textures;
-    std::vector<Bullet*> bullets;
+    std::map<std::string, sf::Texture *> textures;
+    std::vector<Bullet *> bullets;
     //Player
     Player *player;
 
@@ -28,8 +28,19 @@ private:
     float spawnTimer;
     float timerMax;
     std::vector<Enemy *> enemies;
+    //Systems
+    unsigned points;
+    //GUI
+    sf::Font font;
+    sf::Text pointText;
+
+    //World
+    sf::Sprite worldBackground;
+    sf::Texture backgroundTexture;
 
     //Private functions
+    void initGUI();
+
     void initWindow();
 
     void initPlayer();
@@ -37,6 +48,10 @@ private:
     void initEnemies();
 
     void initTextures();
+
+    void initWorld();
+
+    void initSystem();
 
 public:
     Game();
@@ -53,9 +68,21 @@ public:
 
     void updateEnemies();
 
+    void updateCombat();
+
+    void updateWorld();
+
+    void updateCollision();
+
+    void updateGUI();
+
     void update();
 
     void render();
+
+    void renderGUI();
+
+    void renderWorld();
 };
 
 

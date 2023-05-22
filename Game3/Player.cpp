@@ -75,3 +75,11 @@ void Player::initVariables() {
 sf::FloatRect Player::getBounds() const {
     return this->sprite.getGlobalBounds();
 }
+
+void Player::setPosition(const sf::Vector2f pos) {
+    this->sprite.setPosition(pos.x,pos.y);
+}
+
+void Player::setPosition(float x, const float y) {
+this->sprite.setPosition(x,y);
+}
