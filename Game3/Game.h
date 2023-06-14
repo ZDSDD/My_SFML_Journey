@@ -24,6 +24,10 @@ private:
     //Player
     Player *player;
 
+    //Player GUI
+    sf::RectangleShape playerHpBar;
+    sf::RectangleShape playerHpBarBack;
+
     //Enemies
     float spawnTimer;
     float timerMax;
@@ -33,6 +37,7 @@ private:
     //GUI
     sf::Font font;
     sf::Text pointText;
+    sf::Text gameOverText;
 
     //World
     sf::Sprite worldBackground;
@@ -76,13 +81,15 @@ public:
 
     void updateGUI();
 
+    void renderGUI();
+
     void update();
 
     void render();
 
-    void renderGUI();
-
     void renderWorld();
+
+
 };
 
 

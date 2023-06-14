@@ -38,19 +38,41 @@ Game::~Game() {
 //Functions
 void Game::run() {
     while (this->window->isOpen()) {
-        this->update();
+        this->updatePollEvents();
+        if (this->player->getHp() > 0) {
+            this->update();
+        }
         this->render();
     }
 }
 
 void Game::initGUI() {
-    if (this->font.loadFromFile("Fonts/Mistral.ttf")) {
+    //LOAD THE FONT
+    if (this->font.loadFromFile("Fonts/16020_FUTURAM.ttf")) {
+        //POINTS TEXT
+        this->pointText.setPosition(700.f, 25.f);
         this->pointText.setFont(this->font);
         this->pointText.setFillColor(sf::Color::White);
-        this->pointText.setCharacterSize(32);
+        this->pointText.setCharacterSize(16);
         this->pointText.setString("test");
+
+        //GAME OVER TEXT
+        this->gameOverText.setFont(this->font);
+        this->gameOverText.setFillColor(sf::Color::White);
+        this->gameOverText.setCharacterSize(16);
+        this->gameOverText.setString("GAME OVER");
+        this->gameOverText.setPosition(
+                this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
+                this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f
+        );
     }
 
+    //Init player GUI
+    this->playerHpBar.setSize(sf::Vector2f(300.f, 25.f));
+    this->playerHpBar.setFillColor(sf::Color(255, 0, 0, 100));
+    this->playerHpBar.setPosition(sf::Vector2f(20.f, 20.f));
+    this->playerHpBarBack = this->playerHpBar;
+    this->playerHpBarBack.setFillColor(sf::Color(25, 25, 25, 200));
 }
 
 void Game::initWorld() {
@@ -77,13 +99,12 @@ void Game::initWindow() {
 }
 
 void Game::initEnemies() {
-    this->timerMax = 33.f;
+    this->timerMax = 15.f;
     this->spawnTimer = this->timerMax;
 }
 
 void Game::update() {
 
-    this->updatePollEvents();
     this->updateInput();
     this->updateBullet();
     this->player->update();
@@ -112,6 +133,11 @@ void Game::render() {
     }
 
     this->renderGUI();
+
+    //Game over screen
+    if (this->player->getHp() <= 0) {
+        this->window->draw(this->gameOverText);
+    }
 
     this->window->display();
 }
@@ -165,8 +191,8 @@ void Game::updateBullet() {
             //Delete bullet
             delete this->bullets.at(counter);
             this->bullets.erase(this->bullets.begin() + counter);
-            --counter;
             std::cout << this->bullets.size() << '\n';
+            --counter;
         }
         ++counter;
     }
@@ -192,14 +218,14 @@ void Game::updateEnemies() {
             delete this->enemies.at(counter);
             this->enemies.erase(this->enemies.begin() + counter);
             --counter;
-            std::cout << this->enemies.size() << '\n';
-
         }
-        //Bullets touching the player ship
-        else if(enemy->getBounds().intersects(this->player->getBounds())){
+            //Bullets touching the player ship
+        else if (enemy->getBounds().intersects(this->player->getBounds())) {
+            this->player->loseHp(enemies.at(counter)->getDMG());
             delete this->enemies.at(counter);
             this->enemies.erase(this->enemies.begin() + counter);
             --counter;
+
         }
         ++counter;
     }
@@ -208,12 +234,18 @@ void Game::updateEnemies() {
 void Game::updateGUI() {
     std::stringstream ss;
     ss << "points: " << this->points;
+    this->pointText.setString(ss.str());
 
-this->pointText.setString(ss.str());
+    //Update player GUI
+    float hpPercent = static_cast<float> (this->player->getHp()) / (this->player->getHpMax());
+    this->playerHpBar.setSize(sf::Vector2f(300.f * hpPercent, this->playerHpBar.getSize().y));
+
 }
 
 void Game::renderGUI() {
     this->window->draw(this->pointText);
+    this->window->draw(this->playerHpBarBack);
+    this->window->draw(this->playerHpBar);
 }
 
 void Game::updateCombat() {
@@ -244,20 +276,22 @@ void Game::updateCollision() {
     if (this->player->getBounds().left < 0.f) {
         this->player->setPosition(0.f, this->player->getBounds().top);
     }
-    //RIGHT WORLD COLLISION
-    else if (this->player->getBounds().left+this->player->getBounds().width > this->window->getSize().x) {
-        this->player->setPosition(this->window->getSize().x -this->player->getBounds().width, this->player->getBounds().top);
+        //RIGHT WORLD COLLISION
+    else if (this->player->getBounds().left + this->player->getBounds().width > this->window->getSize().x) {
+        this->player->setPosition(this->window->getSize().x - this->player->getBounds().width,
+                                  this->player->getBounds().top);
     }
     //TOP WORLD COLLISION
     if (this->player->getBounds().top < 0.f) {
         this->player->setPosition(this->player->getBounds().left, 0.f);
     }
-    //BOTTOM WORLD COLLISION
+        //BOTTOM WORLD COLLISION
     else if (this->player->getBounds().top + this->player->getBounds().height > this->window->getSize().y) {
-        this->player->setPosition(this->player->getBounds().left, this->window->getSize().y-this->player->getBounds().height);
+        this->player->setPosition(this->player->getBounds().left,
+                                  this->window->getSize().y - this->player->getBounds().height);
     }
 }
 
 void Game::initSystem() {
-this->points = 0;
+    this->points = 0;
 }

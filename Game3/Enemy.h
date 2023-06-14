@@ -28,6 +28,7 @@ public:
     //Accesors
     sf::FloatRect  getBounds();
     const int &getPoints() const;
+    int getDMG()const{ return damage; }
     //Functions
     void update();
     void render(sf::RenderTarget & target);

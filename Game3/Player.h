@@ -12,6 +12,8 @@ private:
     sf::Sprite sprite;
     sf::Texture texture;
 
+    int hp;
+    int hpMax;
     float movementSpeed;
     float attackCooldown;
     float attackCooldownMax;
@@ -29,11 +31,15 @@ public:
     const sf::Vector2f & getPos() const;
     bool canAttack();
     sf::FloatRect getBounds()const;
+    const int & getHp()const { return hp; };
+    const int & getHpMax()const { return hpMax; };
 
 
     ///     MODIFIERS       ////
     void setPosition(sf::Vector2f pos);
     void setPosition(float x, float y);
+    void setHp(const int & value);
+    void loseHp(const int & value);
 
     ///     Functions     ////
 
