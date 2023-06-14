@@ -193,15 +193,23 @@ void Game::updateEnemies() {
             this->enemies.erase(this->enemies.begin() + counter);
             --counter;
             std::cout << this->enemies.size() << '\n';
+
+        }
+        //Bullets touching the player ship
+        else if(enemy->getBounds().intersects(this->player->getBounds())){
+            delete this->enemies.at(counter);
+            this->enemies.erase(this->enemies.begin() + counter);
+            --counter;
         }
         ++counter;
     }
 }
 
 void Game::updateGUI() {
-//    std::stringstream ss;
-//    ss << "points: " << this->points;
-this->pointText.setString(this->points);
+    std::stringstream ss;
+    ss << "points: " << this->points;
+
+this->pointText.setString(ss.str());
 }
 
 void Game::renderGUI() {
@@ -212,6 +220,7 @@ void Game::updateCombat() {
     for (int i = 0; i < this->enemies.size(); ++i) {
         for (int j = 0; j < this->bullets.size(); ++j) {
             if (this->enemies[i]->getBounds().intersects(this->bullets[j]->getBounds())) {
+                this->points += enemies[i]->getPoints();
                 delete this->enemies[i];
                 this->enemies.erase(this->enemies.begin() + i);
                 delete this->bullets[j];
