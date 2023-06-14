@@ -13,4 +13,4 @@ SFML 2.5.1: GCC 7.3.0 MinGW (SEH) - 64-bit
 ### Game2
 ![](Game2/Game2.gif)
 ### Game2
-![](Game3/Game3.gif)
+![](Game3/game3.gif)
