@@ -4,9 +4,9 @@
 
 #include "../Headers/Game.h"
 
-void Game::initWindow() {
-    this->window.create(sf::VideoMode(800, 600), "Game 4", sf::Style::Close | sf::Style::Titlebar);
-    this->window.setFramerateLimit(1);
+void Game::initWindow(const int & w,const int & h) {
+    this->window.create(sf::VideoMode(w, h), "Game 4", sf::Style::Close | sf::Style::Titlebar);
+    this->window.setFramerateLimit(60);
 }
 
 void Game::initPlayer() {
@@ -21,8 +21,8 @@ Game::~Game() {
     delete this->player;
 }
 //CONSTRUCTOR
-Game::Game() {
-    initWindow();
+Game::Game(const int & w,const int & h) {
+    initWindow(w,h);
     initPlayer();
 }
 
@@ -32,13 +32,18 @@ const sf::RenderWindow &Game::getWindow() const {
 
 void Game::render() {
     //Clear the old frame
-    this->window.clear(sf::Color(rand()%255,rand()%255,rand()%255,rand()%200));
+    this->window.clear();
 
     //Render stuff
 
+    this->renderPlayer();
 
     //Render stuff to the window
     this->window.display();
+}
+
+void Game::renderPlayer() {
+    this->player->render(this->window);
 }
 
 void Game::update() {
@@ -51,10 +56,10 @@ void Game::update() {
             this->window.close();
         }
     }
-    void updatePlayer();
+    updatePlayer();
 }
 
 void Game::updatePlayer() {
-
+this->player->update();
 }
 

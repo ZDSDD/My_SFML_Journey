@@ -15,17 +15,18 @@ private:
 
     Player *player;
 
-    void initWindow();
+    void initWindow(const int & w,const int & h);
     void initPlayer();
 
 public:
-    Game();
+    Game(const int & w = 800,const int & h = 600);
 
     virtual ~Game();
 
     //Functions
     const sf::RenderWindow &getWindow()const;
     void render();
+    void renderPlayer();
     void update();
     void updatePlayer();
 };
