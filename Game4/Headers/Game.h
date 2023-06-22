@@ -29,6 +29,9 @@ public:
     void renderPlayer();
     void update();
     void updatePlayer();
+    void updateCollision();
+
+    void updatePollEvents();
 };
 
 

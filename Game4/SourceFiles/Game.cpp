@@ -48,18 +48,36 @@ void Game::renderPlayer() {
 
 void Game::update() {
 
-    //Polling events
+    updatePollEvents();
+    updatePlayer();
+    updateCollision();
+}
+
+void Game::updatePlayer() {
+this->player->update();
+}
+
+void Game::updateCollision() {
+    if(this->player->getGlobalBounds().top - + this->player->getGlobalBounds().height <= this->window.getSize().y){
+        this->player->setPosition(this->player->getGlobalBounds().left,
+                                  this->window.getSize().y-this->player->getGlobalBounds().height);
+    }
+}
+
+void Game::updatePollEvents() {
     while (this->window.pollEvent(this->ev)) {
         if (this->ev.type == sf::Event::Closed) {
             this->window.close();
         } else if (this->ev.type == sf::Event::KeyPressed && this->ev.key.code == sf::Keyboard::Escape) {
             this->window.close();
         }
+        if (this->ev.type == sf::Event::KeyReleased &&
+            this->ev.key.code == sf::Keyboard::A ||
+            this->ev.key.code == sf::Keyboard::D ||
+            this->ev.key.code == sf::Keyboard::W ||
+            this->ev.key.code == sf::Keyboard::A){
+            this->player->resetAnimationTimer();
+        }
     }
-    updatePlayer();
-}
-
-void Game::updatePlayer() {
-this->player->update();
 }
 

@@ -17,7 +17,11 @@ class Game {
 private:
 
     sf::RenderWindow *window;
+    sf::Clock clock;
 
+    float dt{0.f};
+
+    float dtMultiplier{62.5f};
     //Resources
     std::map<std::string, sf::Texture *> textures;
     std::vector<Bullet *> bullets;
@@ -59,6 +63,9 @@ private:
     void initSystem();
 
 public:
+
+
+
     Game();
 
     virtual ~Game();

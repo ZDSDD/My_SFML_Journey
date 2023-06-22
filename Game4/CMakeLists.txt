@@ -3,7 +3,7 @@ project(Game4)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Game4 main.cpp stdafx.h SourceFiles/Game.cpp Headers/Game.h SourceFiles/Player.cpp Headers/Player.h)
+add_executable(Game4 main.cpp stdafx.h SourceFiles/Game.cpp Headers/Game.h SourceFiles/Player.cpp Headers/Player.h SourceFiles/TileMap.cpp Headers/TileMap.h SourceFiles/Tile.cpp Headers/Tile.h)
 
 set(PRECOMPILED_HEADERS stdafx.h)
 target_precompile_headers(Game4 PRIVATE ${PRECOMPILED_HEADERS})

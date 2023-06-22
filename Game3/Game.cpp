@@ -93,7 +93,7 @@ void Game::initTextures() {
 void Game::initWindow() {
     this->window = new sf::RenderWindow(sf::VideoMode(800, 600),
                                         "Game 3", sf::Style::Close | sf::Style::Titlebar);
-    this->window->setFramerateLimit(60);
+    this->window->setFramerateLimit(20);
     this->window->setVerticalSyncEnabled(false);
 
 }
@@ -105,6 +105,8 @@ void Game::initEnemies() {
 
 void Game::update() {
 
+    dt = clock.restart().asSeconds();
+    std::cout << dt << "\n";
     this->updateInput();
     this->updateBullet();
     this->player->update();
@@ -157,16 +159,16 @@ void Game::updatePollEvents() {
 
 void Game::updateInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        this->player->move(-1.f, 0.f);
+        this->player->move(-1.f * dt * dtMultiplier, 0.f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        this->player->move(1.f, 0.f);
+        this->player->move(1.f* dt * dtMultiplier, 0.f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        this->player->move(0.f, -1.0f);
+        this->player->move(0.f, -1.0f* dt * dtMultiplier);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        this->player->move(0.f, 1.f);
+        this->player->move(0.f, 1.f* dt * dtMultiplier);
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->player->canAttack()) {
         this->bullets.push_back(
@@ -176,7 +178,7 @@ void Game::updateInput() {
                         this->player->getPos().y,
                         0.f,
                         -1.f,
-                        7.f)
+                        7.f * dt * dtMultiplier)
         );
     }
 }
