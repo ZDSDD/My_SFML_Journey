@@ -6,7 +6,7 @@
 #define SNAKE_GAME_H
 
 #include <valarray>
-#include "predefined.h"
+#include "../../Flappy/predefined.h"
 
 class Game {
 private:

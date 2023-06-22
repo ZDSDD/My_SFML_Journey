@@ -3,9 +3,9 @@ project(Snake)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Snake main.cpp Game.cpp Game.h)
+add_executable(Snake main.cpp Game.cpp Game.h predefined.h predefined.h)
 
-set(PRECOMPILED_HEADERS predefined.h)
+set(PRECOMPILED_HEADERS ../../Flappy/predefined.h)
 target_precompile_headers(Snake PRIVATE ${PRECOMPILED_HEADERS})
 
 set(SFML_STATIC_LIBRARIES TRUE)
