@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.25)
+project(Flappy)
+
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(Flappy main.cpp Headers/State.hpp Sources/StateMachine.cpp Headers/StateMachine.hpp Sources/AssetManager.cpp Headers/AssetManager.hpp Sources/InputManager.cpp Headers/InputManager.hpp Sources/Game.cpp Headers/Game.hpp Headers/DEFINITIONS.hpp Sources/SplashState.cpp Headers/SplashState.hpp Sources/MainMenuState.cpp Headers/MainMenuState.hpp Sources/GameState.cpp Headers/GameState.hpp Sources/GameOverState.cpp Headers/GameOverState.hpp Sources/Pipe.cpp Headers/Pipe.hpp Sources/Land.cpp Headers/Land.hpp Sources/Bird.cpp Headers/Bird.hpp Sources/Collision.cpp Headers/Collision.hpp Sources/Flash.cpp Headers/Flash.h Sources/HUD.cpp Headers/HUD.hpp)
+set(PRECOMPILED_HEADERS Headers/predefined.hpp)
+target_precompile_headers(Flappy PRIVATE ${PRECOMPILED_HEADERS})
+include_directories(Headers Sources)
+set(SFML_STATIC_LIBRARIES TRUE)
+set(SFML_DIR "D:/SFML-2.5.1/lib/cmake/SFML")
+find_package(SFML 2.5.1 COMPONENTS system window graphics audio REQUIRED)
+file(COPY "Textures" DESTINATION "${CMAKE_BINARY_DIR}")
+file(COPY "Resources" DESTINATION "${CMAKE_BINARY_DIR}")
+#file(COPY "Fonts" DESTINATION "${CMAKE_BINARY_DIR}")
+target_link_libraries(Flappy sfml-system sfml-window sfml-graphics sfml-audio)

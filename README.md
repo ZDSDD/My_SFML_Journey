@@ -16,3 +16,5 @@ SFML 2.5.1: GCC 7.3.0 MinGW (SEH) - 64-bit
 ![](Game3/game3.gif)
 ### Snake
 ![](Snake/snake.gif)
+### Flappy Bird
+![](Flappy/Flappy.mp4)
